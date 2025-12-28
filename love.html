@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surprise ❤️</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+:root{
+  --pink:#ffb6c1;
+  --accent:#e91e63;
+}
+
+body{
+  margin:0;
+  font-family:'Nunito',sans-serif;
+  background:var(--pink);
+  height:100vh;
+  overflow:hidden;
+  transition: background 0.5s;
+}
+
+/* 🌸 BACKGROUND FLOATING */
+.floating-bg{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:1;
+}
+.float{
+  position:absolute;
+  bottom:-10%;
+  font-size:2rem;
+  opacity:.8;
+  animation:floatUp linear infinite;
+  transition: color 0.5s;
+}
+@keyframes floatUp{
+  from{transform:translateY(0) rotate(0deg);opacity:.9}
+  to{transform:translateY(-120vh) rotate(360deg);opacity:0}
+}
+
+/* LOGIN */
+#login-overlay{
+  position:fixed;
+  inset:0;
+  background:var(--pink);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+  transition:.8s;
+}
+
+.login-box{
+  background:white;
+  padding:2.5rem;
+  border-radius:25px;
+  text-align:center;
+  width:90%;
+  max-width:350px;
+  box-shadow:0 10px 30px rgba(0,0,0,.1);
+}
+
+.login-box.shake{animation:shake .4s}
+@keyframes shake{
+  0%{transform:translateX(0)}
+  25%{transform:translateX(-6px)}
+  50%{transform:translateX(6px)}
+  75%{transform:translateX(-6px)}
+  100%{transform:translateX(0)}
+}
+
+.pass-input{
+  width:80%;
+  padding:12px;
+  border-radius:15px;
+  border:2px solid pink;
+  font-size:1.2rem;
+  text-align:center;
+}
+
+.enter-btn{
+  margin-top:20px;
+  padding:10px 40px;
+  border:none;
+  border-radius:20px;
+  background:var(--accent);
+  color:white;
+  cursor:pointer;
+}
+
+.error-msg{
+  display:none;
+  color:#d32f2f;
+  margin-top:10px;
+}
+
+/* MAIN */
+#main-content{
+  display:none;
+  height:100%;
+  text-align:center;
+  padding-top:25px;
+  position:relative;
+  z-index:2;
+}
+
+.welcome-text{
+  font-family:'Dancing Script',cursive;
+  font-size:3rem;
+  color:var(--accent);
+  min-height:60px;
+}
+
+#days-together{
+  font-family:'Dancing Script',cursive;
+  font-size:1.5rem;
+  color:var(--accent);
+  margin-top:10px;
+}
+
+.tabs-container{
+  display:flex;
+  gap:15px;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+
+.tab-btn{
+  padding:10px 20px;
+  border:none;
+  border-radius:50px;
+  background:white;
+  font-weight:bold;
+  cursor:pointer;
+  transition: 0.3s;
+}
+
+.tab-btn.active{
+  background:var(--accent);
+  color:white;
+}
+
+.content-display{
+  width:85%;
+  max-width:600px;
+  height:55vh;
+  margin:20px auto;
+  background:rgba(255,255,255,.9);
+  border-radius:20px;
+  padding:20px;
+  overflow-y:auto;
+}
+
+/* --- إضافة 2: تجميل شكل السكرول بار (شريط التمرير) --- */
+.content-display::-webkit-scrollbar {
+    width: 8px;
+}
+.content-display::-webkit-scrollbar-track {
+    background: #fff0f5; 
+    border-radius: 10px;
+}
+.content-display::-webkit-scrollbar-thumb {
+    background: var(--accent); 
+    border-radius: 10px;
+}
+.content-display::-webkit-scrollbar-thumb:hover {
+    background: #c2185b; 
+}
+/* ---------------------------------------------------- */
+
+.section-content{display:none}
+.section-content.active{display:block}
+
+/* --- إضافة 1: تنسيق الكلام والفقرات --- */
+.letter-text {
+    direction: rtl; /* عشان الكلام عربي */
+    text-align: center; /* توسيط الكلام */
+    padding: 0 10px;
+}
+.letter-text p {
+    font-size: 1.1rem;
+    line-height: 1.8; /* مسافة مريحة بين السطور */
+    margin-bottom: 20px; /* مسافة بين كل فقرة والتانية */
+    color: #444;
+}
+/* -------------------------------------- */
+
+/* PHOTOS GRID */
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+.album-img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 15px;
+  cursor: zoom-in;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.album-img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+/* NOTES */
+#notes li{
+  background:#fff0f5;
+  padding:12px;
+  margin-bottom:10px;
+  border-radius:12px;
+  border-right:5px solid var(--accent);
+}
+
+/* MODAL */
+#img-modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.8);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:99999;
+}
+#img-modal img{
+  max-width:90%;
+  max-height:90%;
+  border-radius:15px;
+}
+
+/* GREETING SCREEN */
+#greeting-screen{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:var(--pink);
+  z-index:9998;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  text-align:center;
+}
+#greeting-screen h1{
+  font-family:'Dancing Script',cursive;
+  font-size:3rem;
+  color:#fff;
+  text-shadow:2px 2px 10px rgba(0,0,0,.2);
+  margin-bottom:20px;
+}
+#greeting-screen .float{
+  font-size:2rem;
+  position:absolute;
+  bottom:-10%;
+  opacity:.8;
+  animation:floatUp linear infinite;
+}
+
+/* NIGHT MODE STARS ANIMATION */
+@keyframes twinkle{
+  0%,100%{opacity:0.5;}
+  50%{opacity:1;}
+}
+
+/* MOBILE */
+@media(max-width:480px){
+  .welcome-text{font-size:2.3rem}
+  .content-display{height:60vh}
+  .photo-grid {grid-template-columns: repeat(2, 1fr);}
+}
+</style>
+</head>
+
+<body>
+
+<div class="floating-bg">
+  <span class="float" style="left:5%;animation-duration:10s">❤️</span>
+  <span class="float" style="left:15%;animation-duration:14s">🧸</span>
+  <span class="float" style="left:25%;animation-duration:9s">💖</span>
+  <span class="float" style="left:35%;animation-duration:12s">🧸</span>
+  <span class="float" style="left:45%;animation-duration:15s">💕</span>
+  <span class="float" style="left:55%;animation-duration:11s">🧸</span>
+  <span class="float" style="left:65%;animation-duration:13s">❤️</span>
+  <span class="float" style="left:75%;animation-duration:10s">🧸</span>
+  <span class="float" style="left:85%;animation-duration:14s">💗</span>
+</div>
+
+<div id="login-overlay">
+  <div class="login-box">
+    <h2>Enter the secret ❤️</h2>
+    <input id="password" class="pass-input" type="password" placeholder="***"
+      onkeyup="if(event.key==='Enter')checkPassword()">
+    <p id="error-msg" class="error-msg">Wrong code 💔</p>
+    <button class="enter-btn" onclick="checkPassword()">Enter</button>
+  </div>
+</div>
+
+<div id="greeting-screen">
+  <h1>كل سنة وانتي طيبة يروحي ❤️</h1>
+  <span class="float" style="left:10%;animation-duration:10s;">❤️</span>
+  <span class="float" style="left:30%;animation-duration:12s;">🧸</span>
+  <span class="float" style="left:50%;animation-duration:14s;">💖</span>
+  <span class="float" style="left:70%;animation-duration:11s;">💕</span>
+  <span class="float" style="left:90%;animation-duration:13s;">🧸</span>
+    <span class="float" style="left:90%;animation-duration:13s;">🧸</span>
+      <span class="float" style="left:90%;animation-duration:13s;">🧸</span>
+</div>
+
+<div id="main-content">
+  <h1 id="typing" class="welcome-text"></h1>
+  <h2 id="days-together"></h2>
+
+  <div class="tabs-container">
+    <button class="tab-btn active" onclick="showTab('letter',this)">❤️ Letter</button>
+    <button class="tab-btn" onclick="showTab('photos',this)">📸 Photos</button>
+    <button class="tab-btn" onclick="showTab('music',this)">🎵 Music</button>
+    <button class="tab-btn" onclick="showTab('notes',this)">📝 Notes</button>
+  </div>
+
+  <div class="content-display">
+    <div id="letter" class="section-content active">
+      <div class="letter-text">
+          <p>كل سنة وانتي معايا وأنا دايمًا جنبك 🎂🎉🫂♥️</p>
+          <p>مش عارف اقول اي ولا اي مش عارف حبيتك كل الحب دا ازاي بس بحبك بجد ومش هحب غيرك لأن مفيش غيرك يستاهل حبي♥️♥️.</p>
+          <p>بقيتي كل حاجه حلوه ف يومي وجودك كفايه يخلي اوحش يوم احلي يوم بحب ضحكتك صوتك شكلكل وكل تفاصيلك بجد♥️♥️.</p>
+          <p>حبي ليكي وصل لدرجه مش طبيعيه عديت العشق بجد بحسد نفسي عشان الجمال والحلاوه والرقه والطيبه والحنيه دي معايا💕💕.</p>
+          <p>هفضل احبك وحبي هيزيد ومش هبطل احبك وادلعك انتي روحي بجد بخاف اخسرك كل دقيقه ببقي مرعوب من الفكره دي دايما.</p>
+          <p>المره دي بجد مش هسيبك ابدا وعد ولو الدنيا كلها ضدك اعرفي اني معاكي وموجود عشانك ف كل وقت اطمنك وافهمك ونحل كل حاجه سوا🫀🌹.</p>
+          <p>مش عاوزك تضايقي من خوفي الزياده وتحولي تخبي تعبك انا بخاف عليكي عشان بحبك بجد خوفي هو طريقتي اني اظهر حبي ليكي🫂.</p>
+          <p>مش عاوزك تبعدي عني تاني وانا مش هتغير وهفضل كدا زي ما انا وهخاف عليكي اكتر واحبك اكتر وحنيتي هتزيد اكتر واكتر🌸💖.</p>
+          <p>كل سنه وانتي طيبه ي روحي🎂🎉 اللهم اجعلها سنة خيرا لها وبداية أجمل لأقدارها وحقق لها كل ما يتمناه قلبها ومع بداية عامك الجديد يارب أسعدها في أبسط تفاصيل حياتها وقَرّب لها الخير حيث كان🤲🏻♥️.</p>
+          <p>كل سنه وسنينك أجمل وأحلى كل سنه وانتي بالف خير وسعاده كل سنه وانتي طيبه يا اجمل حاجه في حياتي كل سنه وانتي قمر طول العمر 🌕♥️.</p>
+          <p>كل سنه وانتي منوره حياتي كلها اللهم إني استودعتك عامًا مضى من عمرها ف يارب أكتب لها الخير والسعادة في أيامها القادمة وعقبال مليون سنه وانتي معايا ♥️♥️</p>
+          <p>ربنا يخليكي ليا ي احلي حاجه حصلتلي ف حياتي بجد احلي صدفه اني قابلتك بدعي دايما ف صلاتي تكوني من نصيبي ومش هبطل دا ابدا✨♥️.</p>
+      </div>
+    </div>
+
+    <div id="photos" class="section-content">
+      <div class="photo-grid">
+        <img src="photo1.jpg" class="album-img">
+        <img src="photo2.jpg" class="album-img">
+        <img src="photo3.jpg" class="album-img">
+        <img src="photo4.jpg" class="album-img">
+        <img src="photo5.jpg" class="album-img">
+        <img src="photo6.jpg" class="album-img">
+      </div>
+    </div>
+
+    <div id="music" class="section-content">
+      <div style="margin-bottom:15px">
+          <p>🎶 Song 1</p>
+          <audio controls style="width:100%">
+            <source src="song1.mp3">
+          </audio>
+      </div>
+      <div>
+          <p>🎶 Song 2</p>
+          <audio controls style="width:100%">
+            <source src="song2.mp3">
+          </audio>
+      </div>
+    </div>
+
+    <div id="notes" class="section-content">
+      <ul style="direction:rtl;list-style:none">
+        <li> وعد يحبيبي مش هسيبك ابدا ومش هخيب ظنك يروحي ♥️</li>
+        <li>وعد لما نكون سوا هعوضك عن كل حاجه يحبيبي واعملك كل ال نفسك في ♥️</li>
+        <li> وعد اشيلك ف عيوني واحافظ عليكي وعمري ما اكسرك او اجرحك  ♥️</li>
+        <li>وعد إني أفضل جنبك العمر كلو ومش هسيبك وحبي هيفضل يزيد♥️</li>
+        <li>كل سنه وانتي طيبه يعمري 🎂</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div id="img-modal" onclick="this.style.display='none'">
+  <img id="modal-img">
+</div>
+
+<button id="toggle-night" style="
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  padding:10px 15px;
+  background:var(--accent);
+  color:white;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  z-index:10000;
+">🌙 Night Mode</button>
+
+<script>
+const SECRET="12012007";
+
+function checkPassword(){
+  const pass=document.getElementById("password");
+  const overlay=document.getElementById("login-overlay");
+  const greeting=document.getElementById("greeting-screen");
+  const main=document.getElementById("main-content");
+  const error=document.getElementById("error-msg");
+  const box=document.querySelector(".login-box");
+
+  if(pass.value===SECRET){
+    confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+
+    overlay.style.opacity="0";
+    setTimeout(()=>{
+      overlay.style.display="none";
+      greeting.style.display="flex";
+
+      setTimeout(()=>{
+        greeting.style.display="none";
+        main.style.display="block";
+        typeText("Welcome Ya Ro7y 💕");
+        updateDaysTogether();
+      },2000);
+
+    },800);
+  }else{
+    error.style.display="block";
+    box.classList.add("shake");
+    setTimeout(()=>box.classList.remove("shake"),400);
+  }
+}
+
+function showTab(id,btn){
+  document.querySelectorAll(".section-content").forEach(s=>{
+    s.classList.remove("active");
+    s.style.display="none";
+  });
+  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+
+  const active=document.getElementById(id);
+  active.style.display="block";
+  active.classList.add("active");
+  btn.classList.add("active");
+}
+
+function typeText(text){
+  let i=0;
+  const el=document.getElementById("typing");
+  el.textContent="";
+  const t=setInterval(()=>{
+    el.textContent+=text[i];
+    i++;
+    if(i>=text.length)clearInterval(t);
+  },80);
+}
+
+document.querySelectorAll(".album-img").forEach(img=>{
+  img.onclick=()=>{
+    document.getElementById("modal-img").src=img.src;
+    document.getElementById("img-modal").style.display="flex";
+  }
+});
+
+document.addEventListener('play', function(e){
+    var audios = document.getElementsByTagName('audio');
+    for(var i = 0, len = audios.length; i < len;i++){
+        if(audios[i] != e.target){
+            audios[i].pause();
+        }
+    }
+}, true);
+
+function updateDaysTogether(){
+  const startDate = new Date("2025-10-30T00:00:00");
+  const now = new Date();
+  let diff = Math.floor((now - startDate) / 1000);
+
+  const days = Math.floor(diff / (3600*24));
+  diff -= days * 3600 * 24;
+
+  const hours = Math.floor(diff / 3600);
+  diff -= hours * 3600;
+
+  const minutes = Math.floor(diff / 60);
+  const seconds = diff - minutes * 60;
+
+  document.getElementById("days-together").textContent = 
+    `احنا مع بعض من ${days} يوم و ${hours} ساعة و ${minutes} دقيقة و ${seconds} ثانية ❤️`;
+}
+
+setInterval(updateDaysTogether, 1000);
+
+let nightMode = false;
+const toggleBtn = document.getElementById("toggle-night");
+
+toggleBtn.onclick = () => {
+  nightMode = !nightMode;
+  const floats = document.querySelectorAll(".float");
+  if(nightMode){
+    document.body.style.background = "#4B0082";
+    floats.forEach(el => {
+      el.textContent = "✨💗";
+      el.style.animation = `floatUp ${Math.random()*8+8}s linear infinite, twinkle ${Math.random()*2+1}s ease-in-out infinite`;
+    });
+    toggleBtn.textContent = "☀️ Day Mode";
+  }else{
+    document.body.style.background = "var(--pink)";
+    const icons = ["❤️","🧸","💖","💕"];
+    floats.forEach((el,i)=>{
+      el.textContent = icons[i%icons.length];
+      el.style.animation = `floatUp ${[10,14,9,12,15,11,13,10,14][i]}s linear infinite`;
+    });
+    toggleBtn.textContent = "🌙 Night Mode";
+  }
+};
+</script>
+
+</body>
+</html>
