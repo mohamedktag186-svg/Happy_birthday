@@ -10,17 +10,17 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <style>
-/* إعدادات الألوان الأساسية */
 :root{
   --pink:#ffb6c1;
   --accent:#e91e63;
 }
 
-body{
+body, html {
   margin:0;
+  padding:0;
   font-family:'Nunito',sans-serif;
   background:var(--pink);
-  height:100vh;
+  height: 100dvh; /* التعديل السحري الأول للموبايل */
   overflow:hidden;
   transition: background 0.5s;
 }
@@ -170,17 +170,18 @@ body{
   color:white;
 }
 
-/* الصندوق الأبيض الأساسي */
+/* التعديل الجذري للبوكس الأبيض */
 .content-display{
-  width:85%;
-  max-width:600px;
-  height:60vh; /* مساحة ممتازة للكمبيوتر */
-  margin:20px auto;
-  background:rgba(255,255,255,.9);
-  border-radius:20px;
-  padding:20px;
-  overflow-y:auto;
-  -webkit-overflow-scrolling: touch; /* سكرول ناعم جداً للآيفون والموبايل */
+  width: 85%;
+  max-width: 600px;
+  height: 65dvh; /* مساحة صافية ومظبوطة */
+  margin: 20px auto;
+  background: rgba(255,255,255,.9);
+  border-radius: 20px;
+  padding: 20px;
+  box-sizing: border-box; /* بيمنع البوكس إنه يطول بزيادة */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* سكرول ناعم جداً للموبايل */
   position: relative;
   z-index: 5;
 }
@@ -206,20 +207,17 @@ body{
   color: #444;
 }
 
-/* التعديل الجذري للصور عشان تظهر كلها وبدون قص */
+/* التعديل الجذري للصور */
 .photo-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 15px;
-  padding-bottom: 80px; /* مساحة عشان آخر صورة تظهر براحتها */
 }
 .album-img {
   width: 100%;
-  height: 180px; /* توحيد الطول عشان الشكل يبقى منتظم */
-  object-fit: contain; /* الكود السحري: بيعرض الصورة كلها بدون قص */
-  background: #fff0f5; /* لون خلفية خفيف في حالة لو الصورة مش مربعة */
+  height: auto; /* الصورة هتظهر بطولها الطبيعي 100% */
   display: block;
-  border-radius: 15px;
+  border-radius: 10px;
   cursor: zoom-in;
   transition: transform 0.3s, box-shadow 0.3s;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -286,24 +284,19 @@ body{
 /* NIGHT MODE */
 @keyframes twinkle{ 0%,100%{opacity:0.5;} 50%{opacity:1;} }
 
-/* MEDIA QUERIES (تعديل استجابة الموبايل) */
+/* MEDIA QUERIES للموبايل */
 @media(max-width:820px){
   .welcome-text{font-size:2.3rem}
   
   .content-display{
-      height: 70vh; /* كبرنا البوكس في الموبايل عشان السكرول يكون مريح */
+      height: 65dvh; 
       width: 90%;
       padding: 15px;
   }
   
   .photo-grid {
-    grid-template-columns: repeat(2, 1fr); /* عمودين بس للموبايل */
+    grid-template-columns: repeat(2, 1fr); /* عمودين بس للموبايل لضمان وضوح الصورة */
     gap: 10px;
-  }
-  
-  .album-img {
-      height: 160px; /* مقاس مناسب لشاشة الموبايل */
-      border-radius: 10px;
   }
 }
 
@@ -385,7 +378,7 @@ div:where(.swal2-container) {
         <button onclick="showMissMsg()" class="tab-btn" style="background:#ff8fa3; color:white;">لما اوحشك 🫂</button>
       </div>
 
-      <div style="text-align: center; margin-top: 40px; margin-bottom: 100px; padding-bottom: 40px; position: relative; z-index: 100;">
+      <div style="text-align: center; margin-top: 40px; position: relative; z-index: 100;">
         <p style="color: var(--accent); font-weight: bold; margin-bottom: 10px;">دوس على القلب ده كدة 👇</p>
         <div onclick="explodeBears()" style="
             font-size: 4rem; 
@@ -398,6 +391,7 @@ div:where(.swal2-container) {
             ❤️
         </div>
       </div>
+      <div style="height: 60px; width: 100%;"></div>
       
       <style>
         @keyframes heartBeat {
@@ -423,6 +417,7 @@ div:where(.swal2-container) {
         <img src="photo9.jpg" class="album-img">
         <img src="photo10.jpg" class="album-img">
       </div>
+      <div style="height: 60px; width: 100%;"></div>
     </div>
 
     <div id="music" class="section-content">
@@ -454,7 +449,6 @@ div:where(.swal2-container) {
         padding: 25px;
         border-radius: 20px;
         margin-top: 30px;
-        margin-bottom: 80px;
         text-align: center;
         box-shadow: 0 0 25px rgba(255, 255, 255, 0.15);
         border: 1px solid #7aa1d2;
@@ -502,6 +496,8 @@ div:where(.swal2-container) {
             ">ابتسمي عشان القمر يكمل 😉🌕</div>
         </div>
       </div>
+      <div style="height: 60px; width: 100%;"></div>
+      
       <style>
         @keyframes moonGlow {
             from { text-shadow: 0 0 10px #fff, 0 0 20px #fffacd; transform: scale(1); }
