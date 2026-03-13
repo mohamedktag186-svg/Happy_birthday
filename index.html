@@ -20,7 +20,7 @@ body, html {
   padding:0;
   font-family:'Nunito',sans-serif;
   background:var(--pink);
-  height: 100dvh; /* التعديل السحري الأول للموبايل */
+  height: 100dvh;
   overflow:hidden;
   transition: background 0.5s;
 }
@@ -170,18 +170,18 @@ body, html {
   color:white;
 }
 
-/* التعديل الجذري للبوكس الأبيض */
+/* البوكس الأبيض */
 .content-display{
   width: 85%;
   max-width: 600px;
-  height: 65dvh; /* مساحة صافية ومظبوطة */
+  height: 65dvh; 
   margin: 20px auto;
   background: rgba(255,255,255,.9);
   border-radius: 20px;
   padding: 20px;
-  box-sizing: border-box; /* بيمنع البوكس إنه يطول بزيادة */
+  box-sizing: border-box; 
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch; /* سكرول ناعم جداً للموبايل */
+  -webkit-overflow-scrolling: touch; 
   position: relative;
   z-index: 5;
 }
@@ -207,7 +207,7 @@ body, html {
   color: #444;
 }
 
-/* التعديل الجذري للصور */
+/* الصور */
 .photo-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -215,7 +215,7 @@ body, html {
 }
 .album-img {
   width: 100%;
-  height: auto; /* الصورة هتظهر بطولها الطبيعي 100% */
+  height: auto; 
   display: block;
   border-radius: 10px;
   cursor: zoom-in;
@@ -295,7 +295,7 @@ body, html {
   }
   
   .photo-grid {
-    grid-template-columns: repeat(2, 1fr); /* عمودين بس للموبايل لضمان وضوح الصورة */
+    grid-template-columns: repeat(2, 1fr); 
     gap: 10px;
   }
 }
@@ -533,16 +533,22 @@ div:where(.swal2-container) {
 
 <button id="toggle-night" style="
   position:fixed;
-  bottom:20px;
-  right:20px;
-  padding:10px 15px;
-  background:var(--accent);
-  color:white;
-  border:none;
-  border-radius:10px;
+  top:20px;
+  left:20px; 
+  width: 45px;
+  height: 45px;
+  background:rgba(255,255,255,0.9);
+  border:2px solid var(--accent);
+  border-radius:50%;
   cursor:pointer;
   z-index:10000;
-">🌙 Night Mode</button>
+  font-size: 1.2rem;
+  display: flex; 
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: 0.3s;
+">🌙</button>
 
 <script>
 const SECRET="12012007";
@@ -669,7 +675,7 @@ toggleBtn.onclick = () => {
       el.textContent = "✨💗";
       el.style.animation = `floatUp ${Math.random()*8+8}s linear infinite, twinkle ${Math.random()*2+1}s ease-in-out infinite`;
     });
-    toggleBtn.textContent = "☀️ Day Mode";
+    toggleBtn.textContent = "☀️"; // تغيير الأيقونة بس
   }else{
     document.body.style.background = "var(--pink)";
     if(loginOverlay) loginOverlay.style.background = "var(--pink)";
@@ -680,7 +686,7 @@ toggleBtn.onclick = () => {
       el.textContent = icons[i%icons.length];
       el.style.animation = `floatUp ${[10,14,9,12,15,11,13,10,14][i]}s linear infinite`;
     });
-    toggleBtn.textContent = "🌙 Night Mode";
+    toggleBtn.textContent = "🌙"; // تغيير الأيقونة بس
   }
 };
 
