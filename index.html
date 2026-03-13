@@ -24,7 +24,7 @@ body{
   transition: background 0.5s;
 }
 
-/*  BACKGROUND FLOATING */
+/* BACKGROUND FLOATING */
 .floating-bg{
   position:fixed;
   inset:0;
@@ -44,7 +44,7 @@ body{
   to{transform:translateY(-120vh) rotate(360deg);opacity:0}
 }
 
-/*  كود حركة الدباديب */
+/* كود حركة الدباديب */
 .bear-particle {
     position: fixed;
     top: 70%;
@@ -493,6 +493,25 @@ div:where(.swal2-container) {
   <img id="modal-img">
 </div>
 
+<button id="toggle-music-btn" onclick="toggleMusic()" style="
+  position:fixed;
+  top:20px;
+  right:20px;
+  width: 45px;
+  height: 45px;
+  background:rgba(255,255,255,0.9);
+  border:2px solid var(--accent);
+  border-radius:50%;
+  cursor:pointer;
+  z-index:10000;
+  font-size: 1.2rem;
+  display: none; 
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: 0.3s;
+">🔇</button>
+
 <button id="toggle-night" style="
   position:fixed;
   bottom:20px;
@@ -519,10 +538,9 @@ function checkPassword(){
 
   if(pass.value===SECRET){
     
-    //  تشغيل الموسيقى
+    // شيلنا الـ play() عشان الصوت ميشتغلش لوحده
     const music = document.getElementById("bg-music");
     music.volume = 0.5;
-    music.play();
 
     // الكونفيتي
     confetti({ 
@@ -540,6 +558,11 @@ function checkPassword(){
       setTimeout(()=>{
         greeting.style.display="none";
         main.style.display="block";
+        
+        // إظهار زرار الموسيقى وهو صامت
+        const musicBtn = document.getElementById("toggle-music-btn");
+        if(musicBtn) musicBtn.style.display = "flex";
+
         typeText("Welcome Ya Ro7y 💕");
         updateDaysTogether();
       },2000);
@@ -605,13 +628,21 @@ function updateDaysTogether(){
 }
 setInterval(updateDaysTogether, 1000);
 
+// تعديل الوضع الليلي عشان يغير لون شاشة الدخول والترحيب
 let nightMode = false;
 const toggleBtn = document.getElementById("toggle-night");
 toggleBtn.onclick = () => {
   nightMode = !nightMode;
   const floats = document.querySelectorAll(".float");
+  
+  const loginOverlay = document.getElementById("login-overlay");
+  const greetingScreen = document.getElementById("greeting-screen");
+
   if(nightMode){
     document.body.style.background = "#4B0082";
+    if(loginOverlay) loginOverlay.style.background = "#4B0082";
+    if(greetingScreen) greetingScreen.style.background = "#4B0082";
+
     floats.forEach(el => {
       el.textContent = "✨💗";
       el.style.animation = `floatUp ${Math.random()*8+8}s linear infinite, twinkle ${Math.random()*2+1}s ease-in-out infinite`;
@@ -619,6 +650,9 @@ toggleBtn.onclick = () => {
     toggleBtn.textContent = "☀️ Day Mode";
   }else{
     document.body.style.background = "var(--pink)";
+    if(loginOverlay) loginOverlay.style.background = "var(--pink)";
+    if(greetingScreen) greetingScreen.style.background = "var(--pink)";
+
     const icons = ["❤️","🧸","💖","💕"];
     floats.forEach((el,i)=>{
       el.textContent = icons[i%icons.length];
@@ -678,8 +712,22 @@ function showMissMsg() {
         backdrop: `rgba(0,0,123,0.4)`
     });
 }
+
+// دالة تشغيل وإيقاف الموسيقى
+let isMusicPlaying = false; 
+function toggleMusic() {
+  const music = document.getElementById("bg-music");
+  const btn = document.getElementById("toggle-music-btn");
+  if (isMusicPlaying) {
+    music.pause();
+    btn.textContent = "🔇"; 
+  } else {
+    music.play();
+    btn.textContent = "🔊"; 
+  }
+  isMusicPlaying = !isMusicPlaying;
+}
 </script>
 
 </body>
 </html>
-
