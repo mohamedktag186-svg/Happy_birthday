@@ -199,7 +199,7 @@ body{
 .letter-text p {
   font-size: 1.1rem;
   line-height: 1.8;
-  margin-bottom: 80px;
+  margin-bottom: 20px;
   color: #444;
 }
 
@@ -363,7 +363,7 @@ div:where(.swal2-container) {
         <button onclick="showMissMsg()" class="tab-btn" style="background:#ff8fa3; color:white;">لما اوحشك 🫂</button>
       </div>
 
-      <div style="text-align: center; margin-top: 40px; margin-bottom: 20px; position: relative; z-index: 100;">
+      <div style="text-align: center; margin-top: 40px; margin-bottom: 100px; padding-bottom: 40px; position: relative; z-index: 100;">
         <p style="color: var(--accent); font-weight: bold; margin-bottom: 10px;">دوس على القلب ده كدة 👇</p>
         <div onclick="explodeBears()" style="
             font-size: 4rem; 
@@ -510,7 +510,7 @@ div:where(.swal2-container) {
   align-items: center;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   transition: 0.3s;
-">🔇</button>
+">🔊</button>
 
 <button id="toggle-night" style="
   position:fixed;
@@ -538,9 +538,10 @@ function checkPassword(){
 
   if(pass.value===SECRET){
     
-    // شيلنا الـ play() عشان الصوت ميشتغلش لوحده
+    // رجعنا تشغيل الموسيقى التلقائي
     const music = document.getElementById("bg-music");
     music.volume = 0.5;
+    music.play();
 
     // الكونفيتي
     confetti({ 
@@ -559,9 +560,12 @@ function checkPassword(){
         greeting.style.display="none";
         main.style.display="block";
         
-        // إظهار زرار الموسيقى وهو صامت
+        // إظهار زرار الموسيقى وهو شغال (🔊)
         const musicBtn = document.getElementById("toggle-music-btn");
-        if(musicBtn) musicBtn.style.display = "flex";
+        if(musicBtn) {
+            musicBtn.style.display = "flex";
+            musicBtn.textContent = "🔊"; 
+        }
 
         typeText("Welcome Ya Ro7y 💕");
         updateDaysTogether();
@@ -714,7 +718,7 @@ function showMissMsg() {
 }
 
 // دالة تشغيل وإيقاف الموسيقى
-let isMusicPlaying = false; 
+let isMusicPlaying = true; // خلينا البداية شغال (True)
 function toggleMusic() {
   const music = document.getElementById("bg-music");
   const btn = document.getElementById("toggle-music-btn");
@@ -731,4 +735,3 @@ function toggleMusic() {
 
 </body>
 </html>
-
