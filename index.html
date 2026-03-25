@@ -237,6 +237,40 @@ body, html {
   text-align: right;
 }
 
+/* GAME STYLES */
+#game-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  width: 100%;
+  max-width: 350px;
+  margin: 20px auto;
+}
+.memory-card {
+  background: #ffb6c1;
+  aspect-ratio: 1;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  color: transparent;
+  cursor: pointer;
+  transition: transform 0.3s, background-color 0.3s, opacity 0.3s;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  user-select: none;
+}
+.memory-card.flip {
+  background: white;
+  color: black;
+  transform: rotateY(180deg);
+  pointer-events: none;
+}
+.memory-card.matched {
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* MODAL */
 #img-modal{
   position:fixed;
@@ -283,6 +317,12 @@ body, html {
 
 /* NIGHT MODE */
 @keyframes twinkle{ 0%,100%{opacity:0.5;} 50%{opacity:1;} }
+
+/* حركة النط للدبدوب */
+@keyframes bounceBear {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
 
 /* MEDIA QUERIES للموبايل */
 @media(max-width:820px){
@@ -353,6 +393,7 @@ div:where(.swal2-container) {
     <button class="tab-btn" onclick="showTab('photos',this)">📸 Photos</button>
     <button class="tab-btn" onclick="showTab('music',this)">🎵 Music</button>
     <button class="tab-btn" onclick="showTab('notes',this)">📝 Notes</button>
+    <button class="tab-btn" style="background:#8f7fe5; color:white;" onclick="showTab('game',this)">🎮 Game</button>
   </div>
 
   <div class="content-display">
@@ -505,11 +546,71 @@ div:where(.swal2-container) {
         }
       </style>
     </div>
+
+    <div id="game" class="section-content">
+      <div style="text-align:center; padding: 10px;">
+        <h2 style="font-family:'Dancing Script', cursive; color:var(--accent); font-size:2rem; margin-bottom:10px;">
+         مفاجأه عشان كتكوتي العثل الي بعشقها وريني شطارتك يلا 🧠💕
+        </h2>
+        <p style="color:#555; margin-bottom: 20px; direction: rtl;">دوسي على كارتين شبه بعض عشان يختفوا 😉</p>
+        
+        <div id="game-grid"></div>
+
+        <button onclick="startGame()" style="
+            margin-top: 25px;
+            padding: 10px 30px;
+            border: none;
+            border-radius: 20px;
+            background: #e91e63;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(233, 30, 99, 0.3);
+          ">
+          العب من تاني 🔄
+        </button>
+      </div>
+      <div style="height: 60px; width: 100%;"></div>
+    </div>
+
   </div>
 </div>
 
 <div id="img-modal" onclick="this.style.display='none'">
   <img id="modal-img">
+</div>
+
+<div id="win-bear-overlay" style="
+  display:none; 
+  position:fixed; 
+  inset:0; 
+  background:rgba(255,182,193,0.95); 
+  z-index:999999; 
+  justify-content:center; 
+  align-items:center; 
+  flex-direction:column; 
+  text-align:center;
+  backdrop-filter: blur(5px);
+">
+  <h2 style="font-family:'Dancing Script', cursive; color:#e91e63; font-size:3rem; margin-bottom:20px; text-shadow: 2px 2px 5px white;">🥰شطورة يا روح قلبي 🥰</h2>
+  <p style="color:#e91e63; font-size:1.3rem; margin-bottom:30px; font-weight:bold;">في رسالة ليكي مع الدبدوب ده دوسي عليه 👇</p>
+  
+  <div onclick="explodeWinningCelebration(); openWinningLetter();" style="
+      cursor: pointer; 
+      animation: bounceBear 2s infinite;
+      background: white;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 5rem;
+      box-shadow: 0 10px 25px rgba(233, 30, 99, 0.3);
+      border: 4px solid #fff;
+  ">
+      🧸💌
+  </div>
 </div>
 
 <button id="toggle-music-btn" onclick="toggleMusic()" style="
@@ -566,7 +667,7 @@ function checkPassword(){
     // تشغيل الموسيقى
     const music = document.getElementById("bg-music");
     music.volume = 0.5;
-    music.play();
+    music.play().catch(e => console.log("Music play prevented by browser"));
 
     // الكونفيتي
     confetti({ 
@@ -613,6 +714,11 @@ function showTab(id,btn){
   active.style.display="block";
   active.classList.add("active");
   btn.classList.add("active");
+
+  // تشغيل اللعبة تلقائيًا لو التاب اتفتح لأول مرة
+  if (id === 'game' && document.getElementById('game-grid').innerHTML === "") {
+      createBoard();
+  }
 }
 
 function typeText(text){
@@ -675,7 +781,7 @@ toggleBtn.onclick = () => {
       el.textContent = "✨💗";
       el.style.animation = `floatUp ${Math.random()*8+8}s linear infinite, twinkle ${Math.random()*2+1}s ease-in-out infinite`;
     });
-    toggleBtn.textContent = "☀️"; // تغيير الأيقونة بس
+    toggleBtn.textContent = "☀️";
   }else{
     document.body.style.background = "var(--pink)";
     if(loginOverlay) loginOverlay.style.background = "var(--pink)";
@@ -686,29 +792,48 @@ toggleBtn.onclick = () => {
       el.textContent = icons[i%icons.length];
       el.style.animation = `floatUp ${[10,14,9,12,15,11,13,10,14][i]}s linear infinite`;
     });
-    toggleBtn.textContent = "🌙"; // تغيير الأيقونة بس
+    toggleBtn.textContent = "🌙";
   }
 };
 
-function explodeBears() {
-    const numBears = 50; 
-    for (let i = 0; i < numBears; i++) {
-        const bear = document.createElement("div");
-        bear.innerHTML = "🧸";
-        bear.className = "bear-particle";
+// -- دالة تفجير الأشكال والمفاجآت --
+function explodeCelebration(icons, numParticles, startXPercentage, startYPercentage) {
+    for (let i = 0; i < numParticles; i++) {
+        const particle = document.createElement("div");
+        const randomIcon = icons[Math.floor(Math.random() * icons.length)];
+        particle.innerHTML = randomIcon;
+        particle.className = "bear-particle";
+        
+        // ظبط مكان الخروج
+        particle.style.top = startYPercentage + "%";
+        particle.style.left = startXPercentage + "%";
+        
         const tx = (Math.random() - 0.5) * window.innerWidth * 1.5; 
         const ty = (Math.random() - 1) * window.innerHeight * 1.5;  
         const r = Math.random() * 720 - 360; 
         const duration = Math.random() * 2 + 1; 
-        bear.style.setProperty("--tx", `${tx}px`);
-        bear.style.setProperty("--ty", `${ty}px`);
-        bear.style.setProperty("--r", `${r}deg`);
-        bear.style.animationDuration = `${duration}s`;
-        document.body.appendChild(bear);
+        
+        particle.style.setProperty("--tx", `${tx}px`);
+        particle.style.setProperty("--ty", `${ty}px`);
+        particle.style.setProperty("--r", `${r}deg`);
+        particle.style.animationDuration = `${duration}s`;
+        
+        document.body.appendChild(particle);
         setTimeout(() => {
-            bear.remove();
+            particle.remove();
         }, duration * 1000);
     }
+}
+
+// دالة دباديب القلب الأساسية
+function explodeBears() {
+    explodeCelebration(["🧸"], 50, 50, 70); 
+}
+
+// دالة احتفال الفوز لما تدوس على الدبدوب الإيموجي (دي اللي هتعمل الانفجار 💥)
+function explodeWinningCelebration() {
+    const winningIcons = ['🌹', '🌸', '❤️', '💖', '🧸'];
+    explodeCelebration(winningIcons, 70, 50, 50); 
 }
 
 function showFearMsg() {
@@ -753,6 +878,120 @@ function toggleMusic() {
     btn.textContent = "🔊"; 
   }
   isMusicPlaying = !isMusicPlaying;
+}
+
+/* ----------------- كود لعبة الذاكرة ----------------- */
+const gameIcons = ['❤️', '🧸', '💖', '💍', '🌟', '🌙', '🐱', '✨'];
+let iconsArray = [...gameIcons, ...gameIcons];
+let cardsData = [];
+let hasFlippedCard = false;
+let lockBoard = false;
+let firstCard, secondCard;
+let matchesCount = 0;
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+function createBoard() {
+    const grid = document.getElementById("game-grid");
+    grid.innerHTML = ""; 
+    matchesCount = 0;
+    lockBoard = false;
+    hasFlippedCard = false;
+    firstCard = null;
+    secondCard = null;
+    
+    cardsData = shuffleArray([...iconsArray]); 
+
+    cardsData.forEach((icon) => {
+        const card = document.createElement("div");
+        card.classList.add("memory-card");
+        card.dataset.icon = icon;
+        card.innerHTML = icon; 
+        card.onclick = () => flipCard(card);
+        grid.appendChild(card);
+    });
+}
+
+function flipCard(card) {
+    if (lockBoard) return; 
+    if (card === firstCard) return; 
+
+    card.classList.add("flip");
+
+    if (!hasFlippedCard) {
+        hasFlippedCard = true;
+        firstCard = card;
+        return;
+    }
+
+    secondCard = card;
+    checkForMatch();
+}
+
+function checkForMatch() {
+    let isMatch = firstCard.dataset.icon === secondCard.dataset.icon;
+    isMatch ? disableCards() : unflipCards();
+}
+
+function disableCards() {
+    firstCard.classList.add("matched");
+    secondCard.classList.add("matched");
+    matchesCount++;
+
+    if (matchesCount >= gameIcons.length) {
+        setTimeout(() => {
+            const bearOverlay = document.getElementById('win-bear-overlay');
+            if (bearOverlay) {
+                bearOverlay.style.display = 'flex';
+                if (typeof confetti === "function") {
+                    confetti({ particleCount: 200, spread: 90, origin: { y: 0.5 }, zIndex: 9999999 });
+                }
+            }
+        }, 500);
+    }
+    resetBoard();
+}
+
+function unflipCards() {
+    lockBoard = true;
+    setTimeout(() => {
+        firstCard.classList.remove("flip");
+        secondCard.classList.remove("flip");
+        resetBoard();
+    }, 1000);
+}
+
+function resetBoard() {
+    [hasFlippedCard, lockBoard] = [false, false];
+    [firstCard, secondCard] = [null, null];
+}
+
+function startGame() {
+    createBoard();
+}
+
+// دالة فتح الجواب بعد الضغط على الدبدوب
+function openWinningLetter() {
+    // بيخفي الدبدوب
+    document.getElementById('win-bear-overlay').style.display = 'none';
+    
+    // بيظهر الجواب النهائي
+    Swal.fire({
+        title: 'يا أحلى واجمل بنوته ف الدنيا ❤️',
+        html: '<p style="line-height:1.8; font-size:1.2rem; color:#444;"> أنا ويني الدبدوب وجاي أقولك سر صغنون  <br>أنا دورت في الغابة كلها على أحلى برطمان عسل، بس محمد قالي مستحيل ألاقي حاجة في الدنيا مسكرة زيك يا منار 🍯💛 خدي حضن دبدوبي كبير مننا إحنا الاتنين 🫂🧸💕</p>',
+        imageUrl: 'https://media.tenor.com/HhuVsfMKePwAAAAm/pooh-winnie-the-pooh.webp',
+        imageWidth: 200,
+        confirmButtonText: 'بحبكم انتو الاتنين 🥰',
+        confirmButtonColor: '#e91e63',
+        background: '#fff0f5',
+        backdrop: `rgba(0,0,123,0.4)`
+    });
 }
 </script>
 
