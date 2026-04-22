@@ -9,6 +9,9 @@
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
 <style>
 :root {
   --pink: #ffb6c1;
@@ -249,6 +252,7 @@ div:where(.swal2-container) { font-family: 'Nunito', sans-serif !important; }
     <button class="tab-btn" onclick="showTab('notes',this)">📝 Notes</button>
     <button class="tab-btn" style="background:#8f7fe5; color:white;" onclick="showTab('game',this)">🎮 Game</button>
     <button class="tab-btn" onclick="showTab('stories',this)">📚 قصص</button>
+    <button class="tab-btn" style="background:#4caf50; color:white;" onclick="showTab('goals',this)">🎯 أهدافنا</button>
   </div>
 
   <div class="content-display">
@@ -289,6 +293,10 @@ div:where(.swal2-container) { font-family: 'Nunito', sans-serif !important; }
         <img src="photo4.jpg" class="album-img" onerror="this.src='https://via.placeholder.com/150/ffb6c1/ffffff?text=Photo+4'">
         <img src="photo5.jpg" class="album-img" onerror="this.src='https://via.placeholder.com/150/ffb6c1/ffffff?text=Photo+5'">
         <img src="photo6.jpg" class="album-img" onerror="this.src='https://via.placeholder.com/150/ffb6c1/ffffff?text=Photo+6'">
+         <img src="photo6.jpg" class="album-img" onerror="this.src='https://via.placeholder.com/150/ffb6c1/ffffff?text=Photo+7'">
+          <img src="photo6.jpg" class="album-img" onerror="this.src='https://via.placeholder.com/150/ffb6c1/ffffff?text=Photo+8'">
+           <img src="photo6.jpg" class="album-img" onerror="this.src='https://via.placeholder.com/150/ffb6c1/ffffff?text=Photo+9'">
+            <img src="photo6.jpg" class="album-img" onerror="this.src='https://via.placeholder.com/150/ffb6c1/ffffff?text=Photo+10'">
       </div>
       <div style="height: 30px;"></div>
     </div>
@@ -388,6 +396,22 @@ div:where(.swal2-container) { font-family: 'Nunito', sans-serif !important; }
       <div style="height: 30px;"></div>
     </div>
 
+    <div id="goals" class="section-content">
+      <div style="text-align:center; padding: 10px; direction: rtl;">
+        <h2 style="font-family:'Dancing Script', cursive; color:var(--accent); font-size:2rem; margin-bottom:10px;">أحلامنا سوا 🎯</h2>
+        <p style="color:#555; margin-bottom: 20px;">اكتبي كل حاجة نفسك نعملها سوا يا روحي ❤️</p>
+        
+        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+          <input type="text" id="goalInput" placeholder="اكتبي هدف جديد..." style="flex: 1; padding: 10px; border-radius: 15px; border: 2px solid var(--pink); outline: none;">
+          <button onclick="addNewGoal()" style="background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 15px; cursor: pointer; font-weight: bold;">إضافة +</button>
+        </div>
+
+        <ul id="goals-list" style="list-style: none; padding: 0; margin: 0;">
+          </ul>
+      </div>
+      <div style="height: 30px;"></div>
+    </div>
+
   </div>
 </div>
 
@@ -438,6 +462,10 @@ function checkPassword() {
         typeText("Welcome Ya Ro7y 💕");
         updateDaysTogether();
         createBoard(); // تجهيز لعبة الذاكرة في الخلفية
+        
+        // --- هنا شغلنا الاستماع للأهداف بمجرد ما تفتح الموقع ---
+        listenToGoals();
+        
       }, 2000);
     }, 800);
   } else {
@@ -772,6 +800,91 @@ function closeStory() {
     audioEl.pause();
     audioEl.currentTime = 0;
 }
+
+
+// --- إعدادات ولوجيك الفايربيز للأهداف ---
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDgBd0XD0l8c711jyKfrOH36-uy9zwQjvA",
+  authDomain: "surprise-c7ba0.firebaseapp.com",
+  projectId: "surprise-c7ba0",
+  storageBucket: "surprise-c7ba0.firebasestorage.app",
+  messagingSenderId: "913292513995",
+  appId: "1:913292513995:web:e074ad6827122af5f3014e",
+  measurementId: "G-WKYBMYG8ET"
+};
+
+// تهيئة قاعدة البيانات
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+const goalsRef = database.ref('ourGoals');
+
+// دالة إضافة هدف جديد
+function addNewGoal() {
+    const input = document.getElementById('goalInput');
+    if (input.value.trim() !== '') {
+        goalsRef.push({
+            text: input.value,
+            completed: false,
+            timestamp: Date.now()
+        });
+        input.value = '';
+        confetti({ particleCount: 50, spread: 30, origin: { y: 0.8 }, colors: ['#4caf50'] });
+    }
+}
+
+// دالة المراقبة (بتتحدث تلقائي لو حد ضاف هدف)
+function listenToGoals() {
+    goalsRef.on('value', (snapshot) => {
+        const data = snapshot.val();
+        const list = document.getElementById('goals-list');
+        list.innerHTML = ''; // تنضيف القائمة قبل إضافة الجديد
+        if (data) {
+            Object.keys(data).forEach((key) => {
+                const goal = data[key];
+                const li = document.createElement('li');
+                li.style = `background: white; padding: 15px; margin-bottom: 10px; border-radius: 15px; 
+                            display: flex; justify-content: space-between; align-items: center; 
+                            box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-right: 5px solid ${goal.completed ? '#4caf50' : 'var(--accent)'}`;
+                
+                li.innerHTML = `
+                    <span style="text-decoration: ${goal.completed ? 'line-through' : 'none'}; color: ${goal.completed ? '#aaa' : '#444'}; flex: 1; text-align: right; font-weight: bold;">
+                        ${goal.text}
+                    </span>
+                    <div style="display: flex; gap: 10px;">
+                        <button onclick="toggleGoal('${key}', ${goal.completed})" style="background: none; border: none; cursor: pointer; font-size: 1.2rem;">${goal.completed ? '✅' : '✔️'}</button>
+                        <button onclick="deleteGoal('${key}')" style="background: none; border: none; cursor: pointer; font-size: 1.2rem;">🗑️</button>
+                    </div>
+                `;
+                list.appendChild(li);
+            });
+        }
+    });
+}
+
+// دالة إتمام الهدف (بتعكس الحالة في الداتا بيز)
+function toggleGoal(key, currentStatus) {
+    goalsRef.child(key).update({ completed: !currentStatus });
+}
+
+// دالة مسح الهدف
+function deleteGoal(key) {
+    Swal.fire({
+        title: 'متأكد؟',
+        text: "عايز تمسح الحلم ده؟",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#e91e63',
+        cancelButtonColor: '#aaa',
+        confirmButtonText: 'أيوه امسحه',
+        cancelButtonText: 'لأ خليه'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            goalsRef.child(key).remove();
+        }
+    });
+}
+
 </script>
 
 </body>
