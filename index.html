@@ -647,20 +647,18 @@ toggleBtn.onclick = () => {
 };
 
 // --- الاحتفالات والدباديب ---
-let lastClickTime = 0; // عشان نمنع التقطيع الخفيف بس نسيبك تلعب براحتك
+let lastClickTime = 0; 
 
 function explodeCelebration(icons, numParticles, startXPercentage, startYPercentage) {
     const now = Date.now();
-    // هنمنع بس لو دست أكتر من 5 مرات في الثانية الواحدة عشان الموبايل ميفصلش، غير كدة هينزل دباديب
-    if (now - lastClickTime < 200) return; 
+    // خلينا القفل صغير جداً (150 ملي ثانية) عشان تدوس وتغرق الشاشة براحتك من غير ما الموبايل يفصل
+    if (now - lastClickTime < 150) return; 
     lastClickTime = now;
 
-    // الموبايل بياخد 25 دبدوب عشان ميقطعش واللاب بياخد الـ 40 كاملين
-    const actualParticles = window.innerWidth < 820 ? 25 : numParticles;
-    
     const fragment = document.createDocumentFragment(); 
 
-    for (let i = 0; i < actualParticles; i++) {
+    // شيلنا الشرط بتاع الموبايل، الاتنين هينزلوا نفس الكمية (numParticles)
+    for (let i = 0; i < numParticles; i++) {
         const particle = document.createElement("div");
         const randomIcon = icons[Math.floor(Math.random() * icons.length)];
         particle.innerHTML = randomIcon;
