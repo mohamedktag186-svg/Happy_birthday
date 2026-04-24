@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Surprise ❤️</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600 ;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js "></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11 "></script>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js "></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js "></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 <style>
 :root {
@@ -25,7 +25,6 @@ body, html {
   height: 100dvh;
   overflow: hidden;
   transition: background 0.5s;
-  -webkit-tap-highlight-color: transparent;
 }
 
 /* BACKGROUND FLOATING */
@@ -44,7 +43,7 @@ body, html {
   position: fixed; top: 70%; left: 50%; font-size: 2.5rem;
   pointer-events: none; z-index: 9999999; opacity: 0;
   animation: bearFly ease-out forwards;
-  will-change: transform, opacity;
+  will-change: transform, opacity; /* السطر ده بيخلي كارت الشاشة يعالج الحركة فتبقى ناعمة */
 }
 @keyframes bearFly {
   0% { transform: translate(-50%, -50%) scale(0.5) rotate(0deg); opacity: 1; }
@@ -53,16 +52,16 @@ body, html {
 
 /* LOGIN */
 #login-overlay {
-  position: fixed; inset: 0; background: var(--pink);
+  position: fixed; inset: 0; background: var(--pink); /* الملاية البينك الأساسية */
   display: flex; justify-content: center; align-items: center; z-index: 9999; transition: .8s;
 }
 .login-box {
-  background: white;
-  padding: 2.5rem 1.5rem;
-  border-radius: 30px;
+  background: white; /* الكارت أبيض */
+  padding: 2.5rem 1.5rem; 
+  border-radius: 30px; /* تدويرة ناعمة */
   text-align: center;
-  width: 90%; max-width: 320px;
-  box-shadow: 0 15px 35px rgba(233, 30, 99, 0.15);
+  width: 90%; max-width: 320px; 
+  box-shadow: 0 15px 35px rgba(233, 30, 99, 0.15); /* شادو بينك خفيف */
 }
 .login-box.shake { animation: shake .4s; }
 @keyframes shake {
@@ -89,13 +88,13 @@ body, html {
   margin-top: 0;
 }
 .pass-input {
-  width: 80%; padding: 12px; border-radius: 25px;
+  width: 80%; padding: 12px; border-radius: 25px; 
   border: 2px solid var(--pink);
-  background: #fff0f5;
+  background: #fff0f5; 
   color: var(--accent);
   font-size: 1.5rem; text-align: center; outline: none;
   letter-spacing: 5px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: 0.3s;
 }
 .pass-input::placeholder {
   color: #ccc;
@@ -103,25 +102,19 @@ body, html {
 }
 .pass-input:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 4px rgba(233, 30, 99, 0.15), 0 8px 20px rgba(233, 30, 99, 0.12);
-  transform: translateY(-1px);
+  box-shadow: 0 0 10px rgba(233, 30, 99, 0.2);
 }
 .enter-btn {
   margin-top: 20px; padding: 12px 0; width: 85%; border: none; border-radius: 25px;
-  background: var(--accent);
-  color: white;
+  background: var(--accent); 
+  color: white; 
   cursor: pointer; font-weight: bold; font-size: 1.2rem;
   box-shadow: 0 5px 15px rgba(233, 30, 99, 0.3);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  touch-action: manipulation;
+  transition: 0.3s;
 }
 .enter-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(233, 30, 99, 0.4);
-}
-.enter-btn:active {
-  transform: translateY(0) scale(0.98);
-  box-shadow: 0 3px 10px rgba(233, 30, 99, 0.3);
+  box-shadow: 0 8px 20px rgba(233, 30, 99, 0.4);
 }
 .error-msg { display: none; color: #ff5252; margin-top: 15px; font-weight: bold; font-size: 1rem; }
 
@@ -140,33 +133,24 @@ body, html {
   display: none; height: 100%; text-align: center; padding-top: 25px;
   position: relative; z-index: 2;
 }
-.welcome-text { font-family: 'Dancing Script', cursive; font-size: 3rem; color: var(--accent); min-height: 60px; margin-bottom: 0; text-shadow: 0 2px 12px rgba(233, 30, 99, 0.2); }
-#days-together { font-family: 'Dancing Script', cursive; font-size: 1.2rem; color: var(--accent); margin-top: 5px; margin-bottom: 20px; font-weight: bold; text-shadow: 0 1px 6px rgba(233, 30, 99, 0.15); }
+.welcome-text { font-family: 'Dancing Script', cursive; font-size: 3rem; color: var(--accent); min-height: 60px; margin-bottom: 0;}
+#days-together { font-family: 'Dancing Script', cursive; font-size: 1.2rem; color: var(--accent); margin-top: 5px; margin-bottom: 20px; font-weight: bold;}
 
 /* TABS */
 .tabs-container { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; padding: 0 10px; }
 .tab-btn {
   padding: 8px 18px; border: none; border-radius: 50px; background: white;
-  font-weight: bold; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 2px 8px rgba(233, 30, 99, 0.08);
-  touch-action: manipulation;
+  font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
-.tab-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(233, 30, 99, 0.15);
-}
-.tab-btn:active {
-  transform: translateY(0) scale(0.97);
-}
-.tab-btn.active { background: var(--accent); color: white; box-shadow: 0 6px 18px rgba(233,30,99,0.35); }
+.tab-btn.active { background: var(--accent); color: white; box-shadow: 0 4px 10px rgba(233,30,99,0.3); }
 
 /* CONTENT DISPLAY (WHITE BOX) */
 .content-display {
   width: 90%; max-width: 600px; height: 60dvh; margin: 20px auto;
-  background: rgba(255,255,255,.9); border-radius: 24px; padding: 20px;
-  padding-bottom: 50px;
+  background: rgba(255,255,255,.9); border-radius: 20px; padding: 20px;
+  padding-bottom: 50px; 
   box-sizing: border-box; overflow-y: auto; -webkit-overflow-scrolling: touch;
-  position: relative; z-index: 5; box-shadow: 0 16px 40px rgba(0,0,0,0.08);
-  backdrop-filter: blur(8px);
+  position: relative; z-index: 5; box-shadow: 0 10px 25px rgba(0,0,0,0.05);
 }
 .content-display::-webkit-scrollbar { width: 6px; }
 .content-display::-webkit-scrollbar-track { background: transparent; }
@@ -188,30 +172,22 @@ body, html {
 /* PHOTOS */
 .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
 .album-img {
-  width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 14px; cursor: zoom-in;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  touch-action: manipulation;
+  width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 10px; cursor: zoom-in;
+  transition: 0.3s; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
-.album-img:hover { transform: scale(1.05) translateY(-4px); box-shadow: 0 10px 24px rgba(233, 30, 99, 0.2); }
+.album-img:hover { transform: scale(1.05); }
 
 /* MODAL */
 #img-modal {
-  position: fixed; inset: 0; background: rgba(0,0,0,.85); display: none;
+  position: fixed; inset: 0; background: rgba(0,0,0,.8); display: none;
   justify-content: center; align-items: center; z-index: 99999;
-  backdrop-filter: blur(4px);
 }
-#img-modal img { max-width: 90%; max-height: 90%; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+#img-modal img { max-width: 90%; max-height: 90%; border-radius: 15px; }
 
 /* NOTES & MOON */
 #notes li {
-  background: #fff0f5; padding: 14px; margin-bottom: 12px; border-radius: 14px;
+  background: #fff0f5; padding: 12px; margin-bottom: 10px; border-radius: 12px;
   border-right: 5px solid var(--accent); text-align: right; color: #444;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-#notes li:hover {
-  transform: translateX(-4px);
-  box-shadow: 0 6px 14px rgba(233, 30, 99, 0.12);
 }
 @keyframes moonGlow {
   from { text-shadow: 0 0 10px #fff, 0 0 20px #fffacd; transform: scale(1); }
@@ -221,14 +197,9 @@ body, html {
 /* MEMORY GAME */
 #game-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; max-width: 350px; margin: 20px auto; }
 .memory-card {
-  background: #ffb6c1; aspect-ratio: 1; border-radius: 14px; display: flex;
+  background: #ffb6c1; aspect-ratio: 1; border-radius: 12px; display: flex;
   justify-content: center; align-items: center; font-size: 2rem; color: transparent;
-  cursor: pointer; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 10px rgba(0,0,0,0.08); user-select: none;
-  touch-action: manipulation;
-}
-.memory-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(233, 30, 99, 0.2);
+  cursor: pointer; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); user-select: none;
 }
 .memory-card.flip { background: white; color: black; transform: rotateY(180deg); pointer-events: none; }
 .memory-card.matched { opacity: 0; pointer-events: none; }
@@ -237,12 +208,10 @@ body, html {
 #flower-container { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 30vh; margin-top: 20px; }
 #flower-emoji { font-size: 6rem; transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); margin-bottom: 20px; user-select: none; }
 .water-btn {
-  background: #4fc3f7; color: white; border: none; padding: 14px 34px; border-radius: 30px;
-  font-size: 1.2rem; font-weight: bold; cursor: pointer; box-shadow: 0 6px 20px rgba(79, 195, 247, 0.4); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  touch-action: manipulation;
+  background: #4fc3f7; color: white; border: none; padding: 12px 30px; border-radius: 25px;
+  font-size: 1.2rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(79, 195, 247, 0.4); transition: 0.3s;
 }
-.water-btn:hover { transform: translateY(-2px) scale(1.05); background: #29b6f6; box-shadow: 0 8px 28px rgba(79, 195, 247, 0.55); }
-.water-btn:active { transform: translateY(0) scale(0.98); }
+.water-btn:hover { transform: scale(1.05); background: #29b6f6; }
 #flower-message {
   display: none; font-family: 'Dancing Script', cursive; color: var(--accent); font-size: 2rem;
   margin-top: 20px; animation: fadeInMsg 1s ease-in-out forwards; direction: rtl; line-height: 1.5;
@@ -260,11 +229,10 @@ body, html {
 /* STORIES */
 .story-list { display: flex; flex-direction: column; gap: 15px; }
 .story-card {
-  background: #fff0f5; padding: 16px; border-radius: 18px; border-right: 6px solid var(--accent);
-  cursor: pointer; transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); text-align: right; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-  touch-action: manipulation;
+  background: #fff0f5; padding: 15px; border-radius: 15px; border-right: 6px solid var(--accent);
+  cursor: pointer; transition: 0.3s; text-align: right; box-shadow: 0 4px 6px rgba(0,0,0,0.05);
 }
-.story-card:hover { transform: translateY(-4px) scale(1.01); box-shadow: 0 10px 22px rgba(233, 30, 99, 0.18); }
+.story-card:hover { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(233, 30, 99, 0.2); }
 .story-card h4 { margin: 0; color: var(--accent); font-size: 1.1rem; }
 
 /* NIGHT MODE ANIMATION */
@@ -277,43 +245,31 @@ body, html {
   #main-content { padding-top: 10px; }
   .welcome-text { font-size: 2.2rem; min-height: 40px; margin-bottom: 5px; }
   #days-together { font-size: 0.95rem; margin-bottom: 10px; }
-
+  
   .tabs-container { gap: 6px; padding: 0 5px; }
   .tab-btn { padding: 6px 12px; font-size: 0.85rem; margin-bottom: 5px; }
-
-  .content-display {
-    width: 95%;
-    padding: 15px;
+  
+  .content-display { 
+    width: 95%; 
+    padding: 15px; 
     padding-bottom: 40px;
-    height: calc(100dvh - 210px);
-    margin: 5px auto 0 auto;
-    border-radius: 20px;
+    height: calc(100dvh - 210px); 
+    margin: 5px auto 0 auto; 
   }
-
+  
   .photo-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
   #game-grid { max-width: 280px; gap: 8px; }
-  .memory-card { font-size: 1.5rem; border-radius: 10px; }
+  .memory-card { font-size: 1.5rem; border-radius: 8px; }
   #flower-emoji { font-size: 4.5rem; }
-  .water-btn { padding: 12px 28px; font-size: 1.1rem; }
+  .water-btn { padding: 10px 25px; font-size: 1.1rem; }
   #win-bear-overlay h2 { font-size: 1.8rem; padding: 0 10px; }
   #win-bear-overlay p { font-size: 1rem; }
   .login-box { padding: 2rem 1.5rem; }
 }
 
-@media(max-width: 380px) {
-  .tabs-container { gap: 5px; padding: 0 4px; }
-  .tab-btn { padding: 5px 10px; font-size: 0.78rem; }
-  .content-display { width: 94%; padding: 12px; }
-  .login-box { padding: 1.8rem 1.2rem; width: 92%; }
-  .login-title { font-size: 1.6rem; }
-  .pass-input { width: 85%; font-size: 1.3rem; }
-  .enter-btn { width: 90%; font-size: 1.1rem; }
-}
-
 /* SweetAlert Font Adjust */
 div:where(.swal2-container) { font-family: 'Nunito', sans-serif !important; }
 </style>
-<base target="_blank">
 </head>
 
 <body>
@@ -369,7 +325,7 @@ div:where(.swal2-container) { font-family: 'Nunito', sans-serif !important; }
   </div>
 
   <div class="content-display">
-
+    
     <div id="letter" class="section-content active">
       <div class="letter-text">
           <p>كل سنة وانتي معايا وأنا دايمًا جنبك 🎂🎉🫂♥️</p>
@@ -400,16 +356,16 @@ div:where(.swal2-container) { font-family: 'Nunito', sans-serif !important; }
 
     <div id="photos" class="section-content">
       <div class="photo-grid">
-        <img src="photo1.jpg" class="album-img" onerror="this.src='https://via.placeholder.com/150/ffb6c1/ffffff?text=Photo+1 '">
-        <img src="photo2.jpg" class="album-img" onerror="this.src='https://via.placeholder.com/150/ffb6c1/ffffff?text=Photo+2 '">
-        <img src="photo3.jpg" class="album-img" onerror="this.src='https://via.placeholder.com/150/ffb6c1/ffffff?text=Photo+3 '">
-        <img src="photo4.jpg" class="album-img" onerror="this.src='https://via.placeholder.com/150/ffb6c1/ffffff?text=Photo+4 '">
-        <img src="photo5.jpg" class="album-img" onerror="this.src='https://via.placeholder.com/150/ffb6c1/ffffff?text=Photo+5 '">
-        <img src="photo6.jpg" class="album-img" onerror="this.src='https://via.placeholder.com/150/ffb6c1/ffffff?text=Photo+6 '">
-        <img src="photo7.jpg" class="album-img" onerror="this.src='https://via.placeholder.com/150/ffb6c1/ffffff?text=Photo+7 '">
-        <img src="photo8.jpg" class="album-img" onerror="this.src='https://via.placeholder.com/150/ffb6c1/ffffff?text=Photo+8 '">
-        <img src="photo9.jpg" class="album-img" onerror="this.src='https://via.placeholder.com/150/ffb6c1/ffffff?text=Photo+9 '">
-        <img src="photo10.jpg" class="album-img" onerror="this.src='https://via.placeholder.com/150/ffb6c1/ffffff?text=Photo+10 '">
+        <img src="photo1.jpg" class="album-img" onerror="this.src='https://via.placeholder.com/150/ffb6c1/ffffff?text=Photo+1'">
+        <img src="photo2.jpg" class="album-img" onerror="this.src='https://via.placeholder.com/150/ffb6c1/ffffff?text=Photo+2'">
+        <img src="photo3.jpg" class="album-img" onerror="this.src='https://via.placeholder.com/150/ffb6c1/ffffff?text=Photo+3'">
+        <img src="photo4.jpg" class="album-img" onerror="this.src='https://via.placeholder.com/150/ffb6c1/ffffff?text=Photo+4'">
+        <img src="photo5.jpg" class="album-img" onerror="this.src='https://via.placeholder.com/150/ffb6c1/ffffff?text=Photo+5'">
+        <img src="photo6.jpg" class="album-img" onerror="this.src='https://via.placeholder.com/150/ffb6c1/ffffff?text=Photo+6'">
+        <img src="photo7.jpg" class="album-img" onerror="this.src='https://via.placeholder.com/150/ffb6c1/ffffff?text=Photo+7'">
+        <img src="photo8.jpg" class="album-img" onerror="this.src='https://via.placeholder.com/150/ffb6c1/ffffff?text=Photo+8'">
+        <img src="photo9.jpg" class="album-img" onerror="this.src='https://via.placeholder.com/150/ffb6c1/ffffff?text=Photo+9'">
+        <img src="photo10.jpg" class="album-img" onerror="this.src='https://via.placeholder.com/150/ffb6c1/ffffff?text=Photo+10'">
       </div>
       <div style="height: 30px;"></div>
     </div>
@@ -437,7 +393,7 @@ div:where(.swal2-container) { font-family: 'Nunito', sans-serif !important; }
         <li>وعد إني أفضل جنبك العمر كلو ومش هسيبك وحبي هيفضل يزيد♥️</li>
         <li>كل سنه وانتي طيبه يعمري 🎂</li>
       </ul>
-
+      
       <div style="background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364); padding: 25px; border-radius: 20px; margin-top: 25px; text-align: center; box-shadow: 0 0 25px rgba(255, 255, 255, 0.15); border: 1px solid #7aa1d2; position: relative; overflow: hidden; color: white;">
         <div style="position: absolute; inset: 0; background-image: radial-gradient(white 1px, transparent 1px); background-size: 50px 50px; opacity: 0.3;"></div>
         <div style="position: relative; z-index: 1;">
@@ -452,7 +408,7 @@ div:where(.swal2-container) { font-family: 'Nunito', sans-serif !important; }
 
     <div id="game" class="section-content">
       <div style="text-align:center; padding: 5px;">
-
+        
         <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
             <button id="btn-memory" onclick="switchSubGame('memory')" style="padding: 8px 18px; border: none; border-radius: 20px; background: #e91e63; color: white; font-weight: bold; cursor: pointer; transition: 0.3s; opacity: 1;">
                 لعبة الكروت 🧠
@@ -487,7 +443,7 @@ div:where(.swal2-container) { font-family: 'Nunito', sans-serif !important; }
       <div style="text-align:center; padding: 10px;">
         <h2 style="font-family:'Dancing Script', cursive; color:var(--accent); font-size:2rem; margin-bottom:10px;">حواديت كتكوتي 🧸📖</h2>
         <p style="color:#555; margin-bottom: 20px; direction: rtl;">دوسي على القصة عشان تسمعيها بصوتي وتقريها ❤️</p>
-
+        
         <div class="story-list">
            <div class="story-card" onclick="openStory('story1')">
               <h4>القصة الأولى: حكاية بندق ومنون 💕</h4>
@@ -513,7 +469,7 @@ div:where(.swal2-container) { font-family: 'Nunito', sans-serif !important; }
       <div style="text-align:center; padding: 10px; direction: rtl;">
         <h2 style="font-family:'Dancing Script', cursive; color:var(--accent); font-size:2rem; margin-bottom:10px;">أحلامنا سوا 🎯</h2>
         <p style="color:#555; margin-bottom: 20px;">اكتبي كل حاجة نفسك نعملها سوا يا روحي ❤️</p>
-
+        
         <div style="display: flex; gap: 10px; margin-bottom: 20px;">
           <input type="text" id="goalInput" placeholder="اكتبي هدف جديد..." style="flex: 1; padding: 10px; border-radius: 15px; border: 2px solid var(--pink); outline: none;">
           <button onclick="addNewGoal()" style="background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 15px; cursor: pointer; font-weight: bold;">إضافة +</button>
@@ -568,16 +524,16 @@ function checkPassword() {
       setTimeout(() => {
         greeting.style.display = "none";
         main.style.display = "block";
-
+        
         const musicBtn = document.getElementById("toggle-music-btn");
         if(musicBtn) { musicBtn.style.display = "flex"; musicBtn.textContent = "🔊"; }
 
-        typeText("𝑤𝑒𝑙𝑐𝑜𝑚𝑒 𝑦𝑎 𝑅𝑜7𝑦 💕");
+        typeText("Welcome Ya Ro7y 💕");
         updateDaysTogether();
-        createBoard();
-
+        createBoard(); 
+        
         listenToGoals();
-
+        
       }, 2000);
     }, 800);
   } else {
@@ -594,7 +550,7 @@ function showTab(id, btn){
     s.style.display = "none";
   });
   document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-
+  
   const active = document.getElementById(id);
   active.style.display = "block";
   active.classList.add("active");
@@ -614,7 +570,7 @@ function typeText(text){
 }
 
 function updateDaysTogether(){
-  const startDate = new Date("2025-11-01T00:00:00");
+  const startDate = new Date("2025-11-01T00:00:00"); 
   const now = new Date();
   let diff = Math.floor((now - startDate) / 1000);
   const days = Math.floor(diff / (3600*24));
@@ -623,7 +579,7 @@ function updateDaysTogether(){
   diff -= hours * 3600;
   const minutes = Math.floor(diff / 60);
   const seconds = diff - minutes * 60;
-  document.getElementById("days-together").textContent =
+  document.getElementById("days-together").textContent = 
     `احنا مع بعض من ${days} يوم و ${hours} ساعة و ${minutes} دقيقة و ${seconds} ثانية ❤️`;
 }
 setInterval(updateDaysTogether, 1000);
@@ -645,16 +601,16 @@ document.addEventListener('play', function(e){
     }
 }, true);
 
-let isMusicPlaying = true;
+let isMusicPlaying = true; 
 function toggleMusic() {
   const music = document.getElementById("bg-music");
   const btn = document.getElementById("toggle-music-btn");
   if (isMusicPlaying) {
     music.pause();
-    btn.textContent = "🔇";
+    btn.textContent = "🔇"; 
   } else {
     music.play();
-    btn.textContent = "🔊";
+    btn.textContent = "🔊"; 
   }
   isMusicPlaying = !isMusicPlaying;
 }
@@ -691,41 +647,45 @@ toggleBtn.onclick = () => {
 };
 
 // --- الاحتفالات والدباديب ---
-let lastClickTime = 0;
+let lastClickTime = 0; // عشان نمنع التقطيع الخفيف بس نسيبك تلعب براحتك
 
 function explodeCelebration(icons, numParticles, startXPercentage, startYPercentage) {
     const now = Date.now();
-    if (now - lastClickTime < 150) return;
+    // هنمنع بس لو دست أكتر من 5 مرات في الثانية الواحدة عشان الموبايل ميفصلش، غير كدة هينزل دباديب
+    if (now - lastClickTime < 200) return; 
     lastClickTime = now;
 
-    const fragment = document.createDocumentFragment();
+    // الموبايل بياخد 25 دبدوب عشان ميقطعش واللاب بياخد الـ 40 كاملين
+    const actualParticles = window.innerWidth < 820 ? 25 : numParticles;
+    
+    const fragment = document.createDocumentFragment(); 
 
-    for (let i = 0; i < numParticles; i++) {
+    for (let i = 0; i < actualParticles; i++) {
         const particle = document.createElement("div");
         const randomIcon = icons[Math.floor(Math.random() * icons.length)];
         particle.innerHTML = randomIcon;
         particle.className = "bear-particle";
         particle.style.top = startYPercentage + "%";
         particle.style.left = startXPercentage + "%";
-
-        const tx = (Math.random() - 0.5) * window.innerWidth * 1.5;
-        const ty = (Math.random() - 1) * window.innerHeight * 1.5;
-        const r = Math.random() * 720 - 360;
-        const duration = Math.random() * 2 + 1;
-
+        
+        const tx = (Math.random() - 0.5) * window.innerWidth * 1.5; 
+        const ty = (Math.random() - 1) * window.innerHeight * 1.5;  
+        const r = Math.random() * 720 - 360; 
+        const duration = Math.random() * 2 + 1; 
+        
         particle.style.setProperty("--tx", `${tx}px`);
         particle.style.setProperty("--ty", `${ty}px`);
         particle.style.setProperty("--r", `${r}deg`);
         particle.style.animationDuration = `${duration}s`;
-
+        
         fragment.appendChild(particle);
-
+        
         setTimeout(() => particle.remove(), duration * 1000);
     }
-    document.body.appendChild(fragment);
+    document.body.appendChild(fragment); 
 }
 
-function explodeBears() { explodeCelebration(["🧸"], 40, 50, 70); }
+function explodeBears() { explodeCelebration(["🧸"], 40, 50, 70); } 
 function explodeWinningCelebration() { explodeCelebration(['🌹', '🌸', '❤️', '💖', '🧸'], 50, 50, 50); }
 
 // --- Sweet Alerts ---
@@ -733,7 +693,7 @@ function showFearMsg() {
     Swal.fire({
         title: 'يا روح قلبي ❤️',
         text: 'أنا دايماً جنبك وسند ليكي متخافيش من حاجة طول ما احنا سوا 🫂❤️',
-        imageUrl: 'https://media.tenor.com/nzhC0KPMyZwAAAAm/peach-goma-comfort-hug.webp ',
+        imageUrl: 'https://media.tenor.com/nzhC0KPMyZwAAAAm/peach-goma-comfort-hug.webp', 
         imageWidth: 200, confirmButtonText: 'طمنتني 🥰', confirmButtonColor: '#e91e63', background: '#fff0f5'
     });
 }
@@ -741,7 +701,7 @@ function showMissMsg() {
     Swal.fire({
         title: 'وانتي كمان وحشتيني يكتكوته ♥️',
         text: 'بحبببببببببببببببببببببببببك ي منارتي ♥️😍',
-        imageUrl: 'https://media.tenor.com/r7FjdxpgDa0AAAAi/milk-and-mocha.gif ',
+        imageUrl: 'https://media.tenor.com/r7FjdxpgDa0AAAAi/milk-and-mocha.gif',
         imageWidth: 200, confirmButtonText: 'بحبك أكتر ❤️', confirmButtonColor: '#e91e63', background: '#fff0f5'
     });
 }
@@ -781,22 +741,22 @@ function shuffleArray(array) {
 
 function createBoard() {
     const grid = document.getElementById("game-grid");
-    grid.innerHTML = "";
+    grid.innerHTML = ""; 
     matchesCount = 0; lockBoard = false; hasFlippedCard = false; firstCard = null; secondCard = null;
-    let cardsData = shuffleArray([...iconsArray]);
+    let cardsData = shuffleArray([...iconsArray]); 
     cardsData.forEach(icon => {
         const card = document.createElement("div");
         card.classList.add("memory-card");
         card.dataset.icon = icon;
-        card.innerHTML = icon;
+        card.innerHTML = icon; 
         card.onclick = () => flipCard(card);
         grid.appendChild(card);
     });
 }
 
 function flipCard(card) {
-    if (lockBoard) return;
-    if (card === firstCard) return;
+    if (lockBoard) return; 
+    if (card === firstCard) return; 
     card.classList.add("flip");
     if (!hasFlippedCard) { hasFlippedCard = true; firstCard = card; return; }
     secondCard = card;
@@ -839,7 +799,7 @@ function openWinningLetter() {
     Swal.fire({
         title: 'يا أحلى واجمل بنوته ف الدنيا ❤️',
         html: '<p style="line-height:1.8; font-size:1.2rem; color:#444;"> أنا ويني الدبدوب وجاي أقولك سر صغنون  <br>أنا دورت في الغابة كلها على أحلى برطمان عسل، بس محمد قالي مستحيل ألاقي حاجة في الدنيا مسكرة زيك يا منار 🍯💛 خدي حضن دبدوبي كبير مننا إحنا الاتنين 🫂🧸💕</p>',
-        imageUrl: 'https://media.tenor.com/HhuVsfMKePwAAAAm/pooh-winnie-the-pooh.webp ',
+        imageUrl: 'https://media.tenor.com/HhuVsfMKePwAAAAm/pooh-winnie-the-pooh.webp',
         imageWidth: 200, confirmButtonText: 'بحبكم انتو الاتنين 🥰', confirmButtonColor: '#e91e63', background: '#fff0f5'
     });
 }
@@ -855,11 +815,11 @@ function waterFlower() {
     flowerStage++;
     flowerEl.style.transform = `scale(${1 + flowerStage * 0.3}) rotate(10deg)`;
     setTimeout(() => { flowerEl.style.transform = `scale(${1 + flowerStage * 0.3}) rotate(0deg)`; }, 200);
-
+    
     if (flowerStage < flowerStages.length) { flowerEl.innerText = flowerStages[flowerStage]; }
     if (flowerStage === flowerStages.length - 1) {
-        waterBtn.style.display = 'none';
-        msgEl.style.display = 'block';
+        waterBtn.style.display = 'none'; 
+        msgEl.style.display = 'block'; 
         explodeCelebration(['🌸', '🌷', '🌺', '🌹', '💐'], 70, 50, 60);
     }
 }
@@ -884,7 +844,7 @@ const storiesData = {
 <b>النهاية السعيدة</b><br>
 بندق قرب منها، بس المرة دي بخجل واحترام. اعتذر لها عن طيشه زمان، وحكى لها إزاي الدنيا علمته إن الحب الحقيقي مش بيتعوض. منون، لأن قلبها كبير وطيب، شافت في عينه إنه اتغير وبقى ناضج بجد ومسؤول وسامحته.<br><br>
 المرة دي، الحب كان من الطرفين. عاشوا أجمل قصة حب، وبعد فترة قصيرة، المزرعة كلها احتفلت بـ أكبر وأحلى فرح لـ بندق ومنون، وعاشوا مع بعض في سعادة.`,
-        audioSrc: 'story1_voice.mp3'
+        audioSrc: 'story1_voice.mp3' 
     },
     'story2': {
         title: 'القصة التانية: حكاية سمسم ولوزة 🐾',
@@ -904,7 +864,7 @@ const storiesData = {
 <b>النهاية: عيلة واحدة</b><br>
 صاحب لوزة شاف شجاعة سمسم وإزاي أنقذ قطته، فقرر إنه ياخده معاه البيت ويكافئه. سمسم أخد أول دش دافي في حياته، وبقى عنده طبق أكل مخصوص.<br><br>
 لوزة وسمسم بقوا عايشين مع بعض في نفس البيت. سمسم علمها شوية شقاوة ولعب، وهي علمته إزاي يستمتع بالهدوء والدفا. وبقوا يقعدوا سوا كل يوم على سور البلكونة، بس المرة دي وهم الاتنين متطمنين وفي أمان.`,
-        audioSrc: 'story2_voice.mp3'
+        audioSrc: 'story2_voice.mp3' 
     }
 };
 
@@ -964,15 +924,15 @@ function listenToGoals() {
     goalsRef.on('value', (snapshot) => {
         const data = snapshot.val();
         const list = document.getElementById('goals-list');
-        list.innerHTML = '';
+        list.innerHTML = ''; 
         if (data) {
             Object.keys(data).forEach((key) => {
                 const goal = data[key];
                 const li = document.createElement('li');
-                li.style = `background: white; padding: 15px; margin-bottom: 10px; border-radius: 15px;
-                            display: flex; justify-content: space-between; align-items: center;
+                li.style = `background: white; padding: 15px; margin-bottom: 10px; border-radius: 15px; 
+                            display: flex; justify-content: space-between; align-items: center; 
                             box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-right: 5px solid ${goal.completed ? '#4caf50' : 'var(--accent)'}`;
-
+                
                 li.innerHTML = `
                     <span style="text-decoration: ${goal.completed ? 'line-through' : 'none'}; color: ${goal.completed ? '#aaa' : '#444'}; flex: 1; text-align: right; font-weight: bold;">
                         ${goal.text}
