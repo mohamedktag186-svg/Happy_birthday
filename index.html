@@ -43,6 +43,7 @@ body, html {
   position: fixed; top: 70%; left: 50%; font-size: 2.5rem;
   pointer-events: none; z-index: 9999999; opacity: 0;
   animation: bearFly ease-out forwards;
+  will-change: transform, opacity; /* السطر ده بيخلي الحركة ناعمة جداً على الموبايل */
 }
 @keyframes bearFly {
   0% { transform: translate(-50%, -50%) scale(0.5) rotate(0deg); opacity: 1; }
@@ -51,13 +52,13 @@ body, html {
 
 /* LOGIN */
 #login-overlay {
-  position: fixed; inset: 0; background: var(--pink); /* رجعنا الملاية البينك الأساسية */
+  position: fixed; inset: 0; background: var(--pink); /* الملاية البينك الأساسية */
   display: flex; justify-content: center; align-items: center; z-index: 9999; transition: .8s;
 }
 .login-box {
-  background: white; /* الكارت أبيض زي ما كان */
+  background: white; /* الكارت أبيض */
   padding: 2.5rem 1.5rem; 
-  border-radius: 30px; /* تدويرة ناعمة زي اللي في صورتك */
+  border-radius: 30px; /* تدويرة ناعمة */
   text-align: center;
   width: 90%; max-width: 320px; 
   box-shadow: 0 15px 35px rgba(233, 30, 99, 0.15); /* شادو بينك خفيف */
@@ -74,7 +75,7 @@ body, html {
   animation: heartBeat 1.5s infinite;
 }
 .login-title {
-  color: var(--accent); /* لون العنوان الأساسي بتاع الموقع */
+  color: var(--accent);
   font-size: 1.8rem;
   font-weight: bold;
   margin: 10px 0 5px 0;
@@ -89,7 +90,7 @@ body, html {
 .pass-input {
   width: 80%; padding: 12px; border-radius: 25px; 
   border: 2px solid var(--pink);
-  background: #fff0f5; /* خلفية فاتحة جدا للمربع */
+  background: #fff0f5; 
   color: var(--accent);
   font-size: 1.5rem; text-align: center; outline: none;
   letter-spacing: 5px;
@@ -105,7 +106,7 @@ body, html {
 }
 .enter-btn {
   margin-top: 20px; padding: 12px 0; width: 85%; border: none; border-radius: 25px;
-  background: var(--accent); /* لون الزرار البينك */
+  background: var(--accent); 
   color: white; 
   cursor: pointer; font-weight: bold; font-size: 1.2rem;
   box-shadow: 0 5px 15px rgba(233, 30, 99, 0.3);
@@ -418,7 +419,7 @@ div:where(.swal2-container) { font-family: 'Nunito', sans-serif !important; }
         </div>
 
         <div id="memory-game-container">
-            <h2 style="font-family:'Dancing Script', cursive; color:var(--accent); font-size:1.8rem; margin-bottom:5px;">مفاجأه عشان كتكوتي العثل الي بعشقها 💕</h2>
+            <h2 style="font-family:'Dancing Script', cursive; color:var(--accent); font-size:1.8rem; margin-bottom:5px;">م مفاجأه عشان كتكوتي العثل الي بعشقها 💕</h2>
             <p style="color:#555; margin-bottom: 15px; direction: rtl;">دوسي على كارتين شبه بعض عشان يختفوا 😉</p>
             <div id="game-grid"></div>
             <button onclick="startGame()" style="margin-top: 15px; padding: 8px 25px; border: none; border-radius: 20px; background: var(--accent); color: white; font-weight: bold; cursor: pointer;">العب من تاني 🔄</button>
@@ -646,28 +647,45 @@ toggleBtn.onclick = () => {
 };
 
 // --- الاحتفالات والدباديب ---
+let isExploding = false; // عشان نمنع التعليق من كتر الدوس
+
 function explodeCelebration(icons, numParticles, startXPercentage, startYPercentage) {
-    for (let i = 0; i < numParticles; i++) {
+    if (isExploding) return; // لو لسه في دباديب بتطير، متعملش حاجة عشان الموبايل ميهنجش
+    isExploding = true;
+    setTimeout(() => isExploding = false, 1200); // افتح الدوس تاني بعد ثانية وكسر
+
+    // تقليل العدد على الموبايلات عشان الأداء
+    const actualParticles = window.innerWidth < 820 ? Math.min(numParticles, 20) : numParticles;
+    
+    const fragment = document.createDocumentFragment(); // تجميع العناصر عشان ننزلهم خبطة واحدة
+
+    for (let i = 0; i < actualParticles; i++) {
         const particle = document.createElement("div");
         const randomIcon = icons[Math.floor(Math.random() * icons.length)];
         particle.innerHTML = randomIcon;
         particle.className = "bear-particle";
         particle.style.top = startYPercentage + "%";
         particle.style.left = startXPercentage + "%";
-        const tx = (Math.random() - 0.5) * window.innerWidth * 1.5; 
-        const ty = (Math.random() - 1) * window.innerHeight * 1.5;  
+        
+        const tx = (Math.random() - 0.5) * window.innerWidth * 1.2; 
+        const ty = (Math.random() - 1) * window.innerHeight * 1.2;  
         const r = Math.random() * 720 - 360; 
-        const duration = Math.random() * 2 + 1; 
+        const duration = Math.random() * 1.5 + 1; // أنيميشن أسرع شوية
+        
         particle.style.setProperty("--tx", `${tx}px`);
         particle.style.setProperty("--ty", `${ty}px`);
         particle.style.setProperty("--r", `${r}deg`);
         particle.style.animationDuration = `${duration}s`;
-        document.body.appendChild(particle);
+        
+        fragment.appendChild(particle);
+        
         setTimeout(() => particle.remove(), duration * 1000);
     }
+    document.body.appendChild(fragment); // نضيفهم كلهم مرة واحدة
 }
-function explodeBears() { explodeCelebration(["🧸"], 40, 50, 70); }
-function explodeWinningCelebration() { explodeCelebration(['🌹', '🌸', '❤️', '💖', '🧸'], 60, 50, 50); }
+
+function explodeBears() { explodeCelebration(["🧸", "❤️"], 35, 50, 70); } // ضفت قلوب مع الدباديب بتدي شكل أحلى
+function explodeWinningCelebration() { explodeCelebration(['🌹', '🌸', '❤️', '💖', '🧸'], 50, 50, 50); }
 
 // --- Sweet Alerts ---
 function showFearMsg() {
