@@ -21,10 +21,15 @@
 body, html {
   margin: 0; padding: 0;
   font-family: 'Nunito', sans-serif;
-  background: var(--pink);
   height: 100dvh;
   overflow: hidden;
-  transition: background 0.5s;
+  
+  background-image: url("light-bg.jpg");
+  background-size: 100% 100%; /* السطر ده بيفرد الصورة كاملة */
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  transition: background-image 0.5s ease-in-out, background-color 0.5s ease-in-out;
 }
 
 /* BACKGROUND FLOATING */
@@ -43,7 +48,7 @@ body, html {
   position: fixed; top: 70%; left: 50%; font-size: 2.5rem;
   pointer-events: none; z-index: 9999999; opacity: 0;
   animation: bearFly ease-out forwards;
-  will-change: transform, opacity; /* السطر ده بيخلي كارت الشاشة يعالج الحركة فتبقى ناعمة */
+  will-change: transform, opacity;
 }
 @keyframes bearFly {
   0% { transform: translate(-50%, -50%) scale(0.5) rotate(0deg); opacity: 1; }
@@ -52,16 +57,19 @@ body, html {
 
 /* LOGIN */
 #login-overlay {
-  position: fixed; inset: 0; background: var(--pink); /* الملاية البينك الأساسية */
+  position: fixed; inset: 0; 
+  background: rgba(255, 182, 193, 0.4); /* خلفية شفافة */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: flex; justify-content: center; align-items: center; z-index: 9999; transition: .8s;
 }
 .login-box {
-  background: white; /* الكارت أبيض */
+  background: rgba(255, 255, 255, 0.95); 
   padding: 2.5rem 1.5rem; 
-  border-radius: 30px; /* تدويرة ناعمة */
+  border-radius: 30px; 
   text-align: center;
   width: 90%; max-width: 320px; 
-  box-shadow: 0 15px 35px rgba(233, 30, 99, 0.15); /* شادو بينك خفيف */
+  box-shadow: 0 15px 35px rgba(233, 30, 99, 0.15); 
 }
 .login-box.shake { animation: shake .4s; }
 @keyframes shake {
@@ -120,7 +128,10 @@ body, html {
 
 /* GREETING SCREEN */
 #greeting-screen {
-  display: none; position: fixed; inset: 0; background: var(--pink);
+  display: none; position: fixed; inset: 0; 
+  background: rgba(255, 182, 193, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   z-index: 9998; justify-content: center; align-items: center; flex-direction: column; text-align: center;
 }
 #greeting-screen h1 {
@@ -528,7 +539,7 @@ function checkPassword() {
         const musicBtn = document.getElementById("toggle-music-btn");
         if(musicBtn) { musicBtn.style.display = "flex"; musicBtn.textContent = "🔊"; }
 
-        typeText("Welcome Ya Ro7y 💕");
+        typeText("𝑤𝑒𝑙𝑐𝑜𝑚𝑒 𝑦𝑎 𝑅𝑜7𝑦 💕");
         updateDaysTogether();
         createBoard(); 
         
@@ -625,18 +636,18 @@ toggleBtn.onclick = () => {
   const greetingScreen = document.getElementById("greeting-screen");
 
   if(nightMode){
-    document.body.style.background = "#2a004f";
-    if(loginOverlay) loginOverlay.style.background = "#2a004f";
-    if(greetingScreen) greetingScreen.style.background = "#2a004f";
+    document.body.style.backgroundImage = 'url("dark-bg.jpg")';
+    if(loginOverlay) loginOverlay.style.background = "rgba(42, 0, 79, 0.5)";
+    if(greetingScreen) greetingScreen.style.background = "rgba(42, 0, 79, 0.5)";
     floats.forEach(el => {
       el.textContent = "✨💗";
       el.style.animation = `floatUp ${Math.random()*8+8}s linear infinite, twinkle ${Math.random()*2+1}s ease-in-out infinite`;
     });
     toggleBtn.textContent = "☀️";
   } else {
-    document.body.style.background = "var(--pink)";
-    if(loginOverlay) loginOverlay.style.background = "var(--pink)";
-    if(greetingScreen) greetingScreen.style.background = "var(--pink)";
+    document.body.style.backgroundImage = 'url("light-bg.jpg")';
+    if(loginOverlay) loginOverlay.style.background = "rgba(255, 182, 193, 0.4)";
+    if(greetingScreen) greetingScreen.style.background = "rgba(255, 182, 193, 0.4)";
     const icons = ["❤️","🧸","💖","💕"];
     floats.forEach((el,i) => {
       el.textContent = icons[i%icons.length];
@@ -647,15 +658,13 @@ toggleBtn.onclick = () => {
 };
 
 // --- الاحتفالات والدباديب ---
-let lastClickTime = 0; // عشان نمنع التقطيع الخفيف بس نسيبك تلعب براحتك
+let lastClickTime = 0; 
 
 function explodeCelebration(icons, numParticles, startXPercentage, startYPercentage) {
     const now = Date.now();
-    // هنمنع بس لو دست أكتر من 5 مرات في الثانية الواحدة عشان الموبايل ميفصلش، غير كدة هينزل دباديب
     if (now - lastClickTime < 200) return; 
     lastClickTime = now;
 
-    // الموبايل بياخد 25 دبدوب عشان ميقطعش واللاب بياخد الـ 40 كاملين
     const actualParticles = window.innerWidth < 820 ? 25 : numParticles;
     
     const fragment = document.createDocumentFragment(); 
