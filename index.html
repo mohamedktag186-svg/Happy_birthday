@@ -18,8 +18,9 @@
   --accent: #e91e63;
 }
 * {
-  -webkit-tap-highlight-color: transparent;
-  outline: none;
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
+  outline: none !important;
 }
 body, html {
   margin: 0; padding: 0;
@@ -115,8 +116,46 @@ body, html {
   border-color: var(--accent);
   box-shadow: 0 0 10px rgba(233, 30, 99, 0.2);
 }
+
+/* NUMPAD STYLES */
+.numpad-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 15px auto;
+  justify-items: center;
+  max-width: 250px;
+}
+.num-btn {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  border: none;
+  background: #fff0f5;
+  color: var(--accent);
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(233, 30, 99, 0.1);
+  transition: transform 0.1s, box-shadow 0.1s;
+  touch-action: manipulation;
+  font-family: 'Nunito', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.num-btn:active {
+  transform: scale(0.9);
+  box-shadow: 0 2px 5px rgba(233, 30, 99, 0.2);
+  background: #ffe4e1;
+}
+.action-btn {
+  background: #ffe4e1;
+  font-size: 1.2rem;
+}
+
 .enter-btn {
-  margin-top: 20px; padding: 12px 0; width: 85%; border: none; border-radius: 25px;
+  margin-top: 15px; padding: 12px 0; width: 85%; border: none; border-radius: 25px;
   background: var(--accent); 
   color: white; 
   cursor: pointer; font-weight: bold; font-size: 1.2rem;
@@ -127,7 +166,7 @@ body, html {
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(233, 30, 99, 0.4);
 }
-.error-msg { display: none; color: #ff5252; margin-top: 15px; font-weight: bold; font-size: 1rem; }
+.error-msg { display: none; color: #ff5252; margin-top: 10px; margin-bottom: 5px; font-weight: bold; font-size: 1rem; }
 
 /* GREETING SCREEN */
 #greeting-screen {
@@ -286,6 +325,10 @@ body, html {
   #win-bear-overlay p { font-size: 1rem; }
   .login-box { padding: 2rem 1.5rem; }
 }
+@media(max-width: 380px){
+  .num-btn { width: 45px; height: 45px; font-size: 1.3rem; }
+  .numpad-container { gap: 10px; margin: 10px auto; }
+}
 
 /* SweetAlert Font Adjust */
 div:where(.swal2-container) { font-family: 'Nunito', sans-serif !important; }
@@ -315,8 +358,25 @@ div:where(.swal2-container) { font-family: 'Nunito', sans-serif !important; }
     <div class="login-icon">💖</div>
     <div class="login-title">اكتبي الباسورد<br>يحبيبي</div>
     <p class="login-subtext">هديه الكتكوته القمر ❤️</p>
-    <input id="password" class="pass-input" type="password" placeholder="........" onkeyup="if(event.key==='Enter')checkPassword()">
+    
+    <input id="password" class="pass-input" type="password" placeholder="........" readonly>
     <p id="error-msg" class="error-msg">بت الباس غلط ❌</p>
+
+    <div class="numpad-container">
+      <button class="num-btn" onclick="addNum(1)">1</button>
+      <button class="num-btn" onclick="addNum(2)">2</button>
+      <button class="num-btn" onclick="addNum(3)">3</button>
+      <button class="num-btn" onclick="addNum(4)">4</button>
+      <button class="num-btn" onclick="addNum(5)">5</button>
+      <button class="num-btn" onclick="addNum(6)">6</button>
+      <button class="num-btn" onclick="addNum(7)">7</button>
+      <button class="num-btn" onclick="addNum(8)">8</button>
+      <button class="num-btn" onclick="addNum(9)">9</button>
+      <button class="num-btn action-btn" onclick="clearNum()">C</button>
+      <button class="num-btn" onclick="addNum(0)">0</button>
+      <button class="num-btn action-btn" onclick="delNum()">⌫</button>
+    </div>
+
     <button class="enter-btn" onclick="checkPassword()">ادخلي ✨</button>
   </div>
 </div>
@@ -369,7 +429,7 @@ div:where(.swal2-container) { font-family: 'Nunito', sans-serif !important; }
 
       <div style="text-align: center; margin-top: 30px; position: relative; z-index: 10;">
         <p style="color: var(--accent); font-weight: bold; margin-bottom: 5px;">دوس على القلب ده كدة 👇</p>
-        <div onclick="explodeBears()" style="font-size: 4rem; cursor: pointer; display: inline-block; animation: heartBeat 1.5s infinite; user-select: none; transition: transform 0.1s;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">❤️</div>
+        <div onclick="explodeBears()" style="font-size: 4rem; cursor: pointer; display: inline-block; animation: heartBeat 1.5s infinite; user-select: none; transition: transform 0.1s;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'" ontouchstart="this.style.transform='scale(0.9)'" ontouchend="this.style.transform='scale(1)'">❤️</div>
       </div>
       <div style="height: 30px;"></div>
     </div>
@@ -521,6 +581,24 @@ div:where(.swal2-container) { font-family: 'Nunito', sans-serif !important; }
 <script>
 // --- إعدادات أساسية ---
 const SECRET = "12012007"; // تاريخ ميلادها
+
+// --- دوال لوحة الأرقام ---
+function addNum(num) {
+  const passInput = document.getElementById("password");
+  if(passInput.value.length < 8) {
+    passInput.value += num;
+  }
+}
+
+function delNum() {
+  const passInput = document.getElementById("password");
+  passInput.value = passInput.value.slice(0, -1);
+}
+
+function clearNum() {
+  const passInput = document.getElementById("password");
+  passInput.value = "";
+}
 
 function checkPassword() {
   const pass = document.getElementById("password");
@@ -904,7 +982,6 @@ function closeStory() {
     audioEl.pause();
     audioEl.currentTime = 0;
 }
-
 
 // --- إعدادات ولوجيك الفايربيز للأهداف ---
 
