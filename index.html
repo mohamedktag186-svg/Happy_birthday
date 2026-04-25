@@ -156,12 +156,19 @@ body, html {
 .tab-btn.active { background: var(--accent); color: white; box-shadow: 0 4px 10px rgba(233,30,99,0.3); }
 
 /* CONTENT DISPLAY (WHITE BOX) */
+/* CONTENT DISPLAY (WHITE BOX) */
 .content-display {
-  width: 90%; max-width: 600px; height: 60dvh; margin: 20px auto;
-  background: rgba(255,255,255,.9); border-radius: 20px; padding: 20px;
+  width: 90%; max-width: 600px; 
+  height: 50dvh; /* قللنا الطول شوية عشان نسيب مساحة للكلام اللي تحت في الصورة */
+  margin: 10px auto 20px auto; /* رفعنا البوكس لفوق شوية */
+  background: rgba(255, 255, 255, 0.45); /* خلينا البوكس شفاف أكتر (45% بدل 90%) */
+  backdrop-filter: blur(8px); /* ضفنا بلور إزاز عشان الكلام يتقري بسهولة */
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.6); /* حافة بيضا خفيفة بتدي شكل إزاز واقعي */
+  border-radius: 20px; padding: 20px;
   padding-bottom: 50px; 
   box-sizing: border-box; overflow-y: auto; -webkit-overflow-scrolling: touch;
-  position: relative; z-index: 5; box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  position: relative; z-index: 5; box-shadow: 0 10px 25px rgba(0,0,0,0.1);
 }
 .content-display::-webkit-scrollbar { width: 6px; }
 .content-display::-webkit-scrollbar-track { background: transparent; }
@@ -260,11 +267,11 @@ body, html {
   .tabs-container { gap: 6px; padding: 0 5px; }
   .tab-btn { padding: 6px 12px; font-size: 0.85rem; margin-bottom: 5px; }
   
-  .content-display { 
+ .content-display { 
     width: 95%; 
     padding: 15px; 
     padding-bottom: 40px;
-    height: calc(100dvh - 210px); 
+    height: calc(100dvh - 280px); /* قللنا الطول هنا كمان للموبايل */
     margin: 5px auto 0 auto; 
   }
   
